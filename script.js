@@ -1,0 +1,193 @@
+let animalData = {
+    base: [],
+    head: [],
+    ears: [],
+    eyes: [],
+    nose: [],
+    legs: [],
+    feet: [],
+    tail: [
+        "cat", "lion", "dog", "monkey", "tiger", "horse", "cow", "pig", "goat", "sheep", "deer", "moose", "rabbit", "rat", "mouse", "squirrel", "chipmunk", "vole", "gerbil", "hamster", "fox", "wolf", "zebra", "giraffe", "camel", "alpaca", "llama", "kangaroo", "wallaby", "koala", "opossum", "possum", "sugar glider", "bandicoot", "quokka", "wombat", "numbat", "tasmanian devil", "tree kangaroo", "chimpanzee", "baboon", "lemur", "howler monkey", "spider monkey", "capuchin", "tamarin", "macaque", "gibbon", "sloth", "anteater", "armadillo", "pangolin", "kinkajou", "ringtail", "binturong", "red panda", "raccoon", "skunk", "civet", "marten", "stoat", "mink", "weasel", "otter", "beaver", "porcupine", "platypus", "crocodile", "alligator", "lizard", "gecko", "chameleon", "skink", "iguana", "anole", "snake", "leaf-tailed gecko", "spider-tailed horned viper", "long-tailed grass lizard", "long-eared jerboa", "gundi", "tenrec", "aye-aye", "fossa", "vampire ground finch", "vinegaroon", "vampire squid", "yeti crab", "bat-eared fox", "tentacled snake", "hairy frogfish", "velvet worm", "mount Lyell shrew", "monitor lizard", "Cameroon scaly-tail", "Cuban solenodon", "giant otter shrew", "northern nail-tail wallaby", "bridled nail-tail wallaby", "vampire squirrel", "Long-Tailed Grass Lizard", "Thresher Shark", "Giraffe", "Long-Eared Jerboa", "Spider Monkey", "Long-Tailed Widowbird", "Asian Grass Lizard", "Resplendent Quetzal", "Ring-Tailed Lemur", "Borneos Tufted Ground Squirrel", "Ribbon-Tailed Astrapia", "Whiptail Ray", "Bengal Tiger", "Blue Jay", "Common Marmoset", "African Serval", "Black-Tailed Prairie Dog", "Cheetah", "Common Opossum", "Cotton-Top Tamarin", "Curlew", "Dromedary Camel", "Eastern Gray Squirrel", "European Red Squirrel", "Flying Fox", "Green Tree Python", "Green Iguana", "Harlequin Toad", "Indian Peafowl", "Japanese Macaque", "King Cobra", "Long-Tailed Macaque", "Madagascar Ring-Tailed Lemur", "Malayan Flying Fox", "Northern Alligator Lizard", "Ocelot", "Olive Baboon", "Pygmy Marmoset", "Red Fox", "Red-Tailed Hawk", "Rhesus Macaque", "Sifaka", "Snow Leopard", "Southern Flying Squirrel", "Spotted Hyena", "Squirrel Monkey", "Striped Skunk", "Sugar Glider", "Tamarin", "Tarsier", "Toadfish", "Tree Kangaroo", "Uakari", "Wallaby", "Western Bluebird", "White-Tailed Deer", "Yellow-Bellied Marmot", "Zebra", "Zorro", "African Grey Parrot", "American Alligator", "American Kestrel", "Asian Elephant", "Clouded Leopard", "Dingo", "Eurasian Lynx", "Galago", "Great Blue Heron", "Long-Tailed Duck"
+    ],
+    coat: [],
+    colour: [
+        "red", "green", "blue", "yellow", "orange", "purple", "pink", "brown", "black", "white",
+        "gray", "cyan", "magenta", "lime", "olive", "navy", "teal", "maroon", "coral", "salmon",
+        "gold", "silver", "bronze", "violet", "indigo", "turquoise", "lavender", "peach", "mint", "crimson",
+        "beige", "ivory", "tan", "chocolate", "plum", "aqua", "fuchsia", "chartreuse", "khaki", "slate",
+        "periwinkle", "sienna", "mahogany", "amber", "ruby", "emerald", "topaz", "onyx", "jade", "cobalt",
+        "scarlet", "cerulean", "sepia", "burgundy", "lilac", "wheat", "rainbow", "neon", "transparent"
+    ],
+extra: [
+  "unicorn horn", "moose antlers", "antlers", "dragon wings", "phoenix feathers",
+  "fairy dust trail", "cyclops eye", "elemental aura", "floating crown", "tail flame",
+  "spectral shimmer", "celestial markings", "crystal growths",
+  "bee stinger", "extra eyes", "glowing eyes", "long whiskers", "fangs",
+  "prehensile tail", "no mouth", "backwards limbs", "split head", "dual spines",
+  "extra limbs", "double tail", "asymmetry", "breathing gills", "armored plates",
+  "kinetic pulses", "spines along the back", "sheep horns",
+  "iridescence", "bioluminescent", "winter coat/summer coat",
+  "albinism", "melanism", "erythrism", "leucism", "xanthochromish",
+  "heterochromia", "oil slick sheen", "glowing veins", "shifting patterns",
+  "patchwork fur", "prism refractions", "speckled with stars",
+  "ink blot markings", "swirling eyes", "chameleon color shift",
+  "embedded gems", "plants", "mushrooms", "vine growths", "flowers blooming",
+  "mossy fur", "rock-like skin", "cloud-like fluff", "tree bark texture",
+  "sandpaper skin", "butterfly wings", "coral growth", "honeycomb structure",
+  "top hat", "fedora", "necklace", "earrings", "scarf", "monocle", "flower crown",
+  "glasses", "bowtie", "tie", "armband", "cloak", "backpack", "boots", "eyepatch",
+  "juvenile", "none", "none", "none", "none"
+]
+
+};
+
+let currentAnimal = {};
+
+async function loadAnimals() {
+    try {
+        console.log('Attempting to load animals.txt...');
+        const response = await fetch('animals.txt');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        console.log('Raw text loaded, length:', text.length);
+        
+        const allAnimals = text.split(',').map(animal => animal.trim().replace(/^"|"$/g, '')).filter(animal => animal.length > 0);
+        console.log('Processed animals count:', allAnimals.length);
+        console.log('First few animals:', allAnimals.slice(0, 5));
+        
+        const fallbackAnimals = [
+            "mouse", "duck", "horse", "wolf", "lion", "tiger", "bear", "elephant",
+            "giraffe", "rhino", "dragon", "eagle", "owl", "snake", "lizard", "frog",
+            "cat", "dog", "rabbit", "fox", "deer", "zebra", "hippo", "crocodile"
+        ];
+        
+        const weightedAnimals = [
+            ...allAnimals, ...allAnimals, ...allAnimals,
+            ...fallbackAnimals
+        ];
+        
+        const realColors = [
+            "red", "green", "blue", "yellow", "orange", "purple", "pink", "brown", "black", "white",
+            "gray", "cyan", "magenta", "lime", "olive", "navy", "teal", "maroon", "coral", "salmon",
+            "gold", "silver", "bronze", "violet", "indigo", "turquoise", "lavender", "peach", "mint", "crimson",
+            "beige", "ivory", "tan", "chocolate", "plum", "aqua", "fuchsia", "chartreuse", "khaki", "slate",
+            "periwinkle", "sienna", "mahogany", "amber", "ruby", "emerald", "topaz", "onyx", "jade", "cobalt",
+            "scarlet", "cerulean", "sepia", "burgundy", "lilac", "wheat", "rainbow", "neon", "transparent"
+        ];
+        
+        const weightedColors = [
+            ...realColors, ...realColors, ...realColors, ...realColors,
+            ...allAnimals
+        ];
+        
+        animalData.base = weightedAnimals;
+        animalData.head = weightedAnimals;
+        animalData.ears = weightedAnimals;
+        animalData.eyes = weightedAnimals;
+        animalData.nose = weightedAnimals;
+        animalData.legs = weightedAnimals;
+        animalData.feet = weightedAnimals;
+        animalData.coat = weightedAnimals;
+        
+        animalData.colour = weightedColors;
+        
+        console.log(`Loaded ${allAnimals.length} animals from animals.txt with ${fallbackAnimals.length} fallback animals in 3:1 ratio (total: ${weightedAnimals.length})`);
+    } catch (error) {
+        console.error('Failed to load animals.txt, using fallback data:', error);
+        const fallback = [
+            "mouse", "duck", "horse", "wolf", "lion", "tiger", "bear", "elephant",
+            "giraffe", "rhino", "dragon", "eagle", "owl", "snake", "lizard", "frog",
+            "cat", "dog", "rabbit", "fox", "deer", "zebra", "hippo", "crocodile"
+        ];
+        animalData.base = fallback;
+        animalData.head = fallback;
+        animalData.ears = fallback;
+        animalData.eyes = fallback;
+        animalData.nose = fallback;
+        animalData.legs = fallback;
+        animalData.feet = fallback;
+        animalData.coat = fallback;
+    }
+}
+
+function getRandomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function generatePart(partType) {
+    const result = getRandomItem(animalData[partType]);
+    currentAnimal[partType] = result;
+    
+    const resultElement = document.getElementById(`${partType}-result`);
+    resultElement.textContent = result;
+    resultElement.classList.add('generated', 'new-result');
+    
+    setTimeout(() => {
+        resultElement.classList.remove('new-result');
+    }, 500);
+    
+    updateFinalDescription();
+}
+
+function updateFinalDescription() {
+    const finalElement = document.getElementById('finalDescription');
+    if (Object.keys(currentAnimal).length === 0) {
+        finalElement.textContent = "Generate some parts to see your creature!";
+    } else {
+        finalElement.textContent = "";
+    }
+}
+
+function generateAllParts() {
+    Object.keys(animalData).forEach(partType => {
+        generatePart(partType);
+    });
+}
+
+function clearAllParts() {
+    currentAnimal = {};
+    
+    Object.keys(animalData).forEach(partType => {
+        const resultElement = document.getElementById(`${partType}-result`);
+        resultElement.textContent = `Click "${partType.charAt(0).toUpperCase() + partType.slice(1)}" to generate`;
+        resultElement.classList.remove('generated');
+    });
+    
+    updateFinalDescription();
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadAnimals();
+    
+    document.querySelectorAll('.part-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const partType = this.getAttribute('data-part');
+            generatePart(partType);
+        });
+    });
+    
+    document.getElementById('generateAll').addEventListener('click', generateAllParts);
+    
+    document.getElementById('clearAll').addEventListener('click', clearAllParts);
+    document.querySelector('.buttons').addEventListener('click', function(e) {
+        const partType = e.target.getAttribute('data-part');
+        if (partType) generatePart(partType);
+    });
+    
+    addHoverEffects();
+});
+
+function addHoverEffects() {
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+}
