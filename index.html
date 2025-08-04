@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Animal Generator</title>
+  <style>
+    body {
+      background: #d8b6c5;
+      margin: 0;
+      padding: 20px;
+      font-family: 'Comic Sans MS', cursive;
+      font-size: 16px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #e6d6e8;
+      border: 2px solid #800080;
+      padding: 15px;
+    }
+    h1 {
+      margin: 0 0 5px;
+      text-align: center;
+      font-style: italic;
+      font-size: 24px;
+    }
+    p.subtitle {
+      margin: 0 0 10px;
+      text-align: center;
+      font-style: italic;
+      font-size: 14px;
+    }
+    .icons {
+      text-align: center;
+      font-size: 32px;
+      margin: 10px 0;
+    }
+    .main {
+      display: flex;
+    }
+    .buttons {
+      flex: 0 0 140px;
+    }
+    .buttons button {
+      display: block;
+      width: 140px;
+      margin: 4px 0;
+      padding: 5px 10px;
+      background: #ffffe0;
+      border: 2px solid #800080;
+      text-align: left;
+      font-style: italic;
+      cursor: pointer;
+    }
+    .btn-indent {
+      margin-left: 20px;
+      width: 110px;
+    }
+    .results {
+      flex: 1;
+      padding-left: 20px;
+      text-align: center;
+      font-style: italic;
+    }
+    .results div {
+      margin: 6px 0;
+    }
+    .divider {
+      border-top: 2px solid #800080;
+      margin: 20px 0;
+    }
+    .final-section {
+      text-align: center;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>- Random Animal Generator -</h1>
+    <p class="subtitle">-by Tuimiz-</p>
+    <div class="icons">🦌 🐕  🦜 🐱 🦏 🐾 🕷️</div>
+    <div class="main">
+      <div class="buttons">
+        <button class="part-btn" data-part="base">Base</button>
+        <button class="part-btn" data-part="head">Head</button>
+        <button class="part-btn btn-indent" data-part="ears">Ears</button>
+        <button class="part-btn btn-indent" data-part="eyes">Eyes</button>
+        <button class="part-btn btn-indent" data-part="nose">Nose</button>
+        <button class="part-btn" data-part="legs">Legs</button>
+        <button class="part-btn btn-indent" data-part="feet">Feet</button>
+        <button class="part-btn" data-part="tail">Tail</button>
+        <button class="part-btn" data-part="coat">Coat</button>
+        <button class="part-btn btn-indent" data-part="colour">Colour</button>
+        <button class="part-btn" data-part="extra">Extra</button>
+        <button id="generateAll">Gen All</button>
+        <button id="clearAll">Clear</button>
+      </div>
+      <div class="results">
+        <div><strong>Base:</strong> <span id="base-result">Click Base</span></div>
+        <div><strong>Head:</strong> <span id="head-result">Click Head</span></div>
+        <div><strong>Ears:</strong> <span id="ears-result">Click Ears</span></div>
+        <div><strong>Eyes:</strong> <span id="eyes-result">Click Eyes</span></div>
+        <div><strong>Nose:</strong> <span id="nose-result">Click Nose</span></div>
+        <div><strong>Legs:</strong> <span id="legs-result">Click Legs</span></div>
+        <div><strong>Feet:</strong> <span id="feet-result">Click Feet</span></div>
+        <div><strong>Tail:</strong> <span id="tail-result">Click Tail</span></div>
+        <div><strong>Coat:</strong> <span id="coat-result">Click Coat</span></div>
+        <div><strong>Colour:</strong> <span id="colour-result">Click Colour</span></div>
+        <div><strong>Extra:</strong> <span id="extra-result">Click Extra</span></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="final-section">
+      <div id="finalDescription">Generate some parts...</div>
+    </div>
+    <div class="icons">🦌 🐕🐕 🦜 🐱 🦏 🐾 🕷️</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
