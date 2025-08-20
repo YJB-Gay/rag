@@ -1,3 +1,115 @@
+// Accessibility settings UI and logic
+function injectAccessibilitySettings() {
+    // Create settings panel
+    const panel = document.createElement('div');
+    panel.id = 'accessibility-panel';
+    panel.style.position = 'fixed';
+    panel.style.top = '10px';
+    panel.style.right = '10px';
+    panel.style.background = '#fff';
+    panel.style.border = '2px solid #333';
+    panel.style.padding = '12px 16px';
+    panel.style.zIndex = '9999';
+    panel.style.borderRadius = '8px';
+    panel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    panel.style.fontSize = '16px';
+    panel.style.maxWidth = '260px';
+    panel.style.display = 'none';
+    panel.style.background = 'var(--acc-bg, #fff)';
+    panel.style.color = 'var(--acc-fg, #222)';
+    panel.innerHTML = `
+        <strong>Accessibility Settings</strong><br>
+        <label>Font Size:
+            <select id="acc-font-size">
+                <option value="16">Default</option>
+                <option value="18">Large</option>
+                <option value="22">Extra Large</option>
+                <option value="28">Huge</option>
+            </select>
+        </label><br>
+        <label>Font Family:
+            <select id="acc-font-family">
+                <option value="">Default</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Tahoma, sans-serif">Tahoma</option>
+                <option value="Comic Sans MS, cursive, sans-serif">Comic Sans</option>
+                <option value="Courier New, monospace">Courier New</option>
+            </select>
+        </label><br>
+        <label>Color Scheme:
+            <select id="acc-color-scheme">
+                <option value="default">Default</option>
+                <option value="dark">Dark</option>
+                <option value="high-contrast">High Contrast</option>
+                <option value="yellow-black">Yellow on Black</option>
+            </select>
+        </label><br>
+        <button id="acc-close" style="margin-top:8px;">Close</button>
+    `;
+    document.body.appendChild(panel);
+
+    // Toggle button
+    const toggleBtn = document.createElement('button');
+    toggleBtn.id = 'acc-toggle';
+    toggleBtn.textContent = 'Accessibility';
+    toggleBtn.style.position = 'fixed';
+    toggleBtn.style.top = '10px';
+    toggleBtn.style.right = '10px';
+    toggleBtn.style.zIndex = '9998';
+    toggleBtn.style.background = '#222';
+    toggleBtn.style.color = '#fff';
+    toggleBtn.style.border = 'none';
+    toggleBtn.style.padding = '8px 14px';
+    toggleBtn.style.borderRadius = '8px';
+    toggleBtn.style.cursor = 'pointer';
+    toggleBtn.style.fontSize = '16px';
+    document.body.appendChild(toggleBtn);
+
+    toggleBtn.addEventListener('click', () => {
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    });
+    panel.querySelector('#acc-close').addEventListener('click', () => {
+        panel.style.display = 'none';
+    });
+
+    // Font size
+    panel.querySelector('#acc-font-size').addEventListener('change', function() {
+        document.documentElement.style.fontSize = this.value + 'px';
+    });
+    // Font family
+    panel.querySelector('#acc-font-family').addEventListener('change', function() {
+        document.body.style.fontFamily = this.value;
+    });
+    // Color scheme
+    panel.querySelector('#acc-color-scheme').addEventListener('change', function() {
+        setColorScheme(this.value);
+    });
+}
+
+function setColorScheme(scheme) {
+    if (scheme === 'dark') {
+        document.documentElement.style.setProperty('--acc-bg', '#181818');
+        document.documentElement.style.setProperty('--acc-fg', '#f1f1f1');
+        document.body.style.background = '#181818';
+        document.body.style.color = '#f1f1f1';
+    } else if (scheme === 'high-contrast') {
+        document.documentElement.style.setProperty('--acc-bg', '#000');
+        document.documentElement.style.setProperty('--acc-fg', '#fff');
+        document.body.style.background = '#000';
+        document.body.style.color = '#fff';
+    } else if (scheme === 'yellow-black') {
+        document.documentElement.style.setProperty('--acc-bg', '#000');
+        document.documentElement.style.setProperty('--acc-fg', '#FFD600');
+        document.body.style.background = '#000';
+        document.body.style.color = '#FFD600';
+    } else {
+        document.documentElement.style.setProperty('--acc-bg', '#fff');
+        document.documentElement.style.setProperty('--acc-fg', '#222');
+        document.body.style.background = '';
+        document.body.style.color = '';
+    }
+}
 let animalData = {
     base: [],
     head: [],
@@ -149,10 +261,36 @@ function updateFinalDescription() {
     }
 }
 
-function generateAllParts() {
-    Object.keys(animalData).forEach(partType => {
-        generatePart(partType);
-    });
+async function generateAllParts() {
+    const partTypes = Object.keys(animalData);
+    for (let i = 0; i < partTypes.length; i++) {
+        await new Promise(resolve => {
+            generatePartWithCallback(partTypes[i], resolve);
+        });
+    }
+}
+
+function generatePartWithCallback(partType, callback) {
+    const resultElement = document.getElementById(`${partType}-result`);
+    let spinFrames = 20;
+    let frame = 0;
+    let spinInterval = setInterval(() => {
+        const temp = getRandomItem(animalData[partType]);
+        resultElement.textContent = temp;
+        resultElement.classList.add('generated', 'new-result');
+        frame++;
+        if (frame >= spinFrames) {
+            clearInterval(spinInterval);
+            const result = getRandomItem(animalData[partType]);
+            currentAnimal[partType] = result;
+            resultElement.textContent = result;
+            setTimeout(() => {
+                resultElement.classList.remove('new-result');
+            }, 500);
+            updateFinalDescription();
+            if (typeof callback === 'function') callback();
+        }
+    }, 100);
 }
 
 function clearAllParts() {
@@ -168,6 +306,7 @@ function clearAllParts() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
+    injectAccessibilitySettings();
     await loadAnimals();
     
     document.querySelectorAll('.part-btn').forEach(button => {
@@ -184,17 +323,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         const partType = e.target.getAttribute('data-part');
         if (partType) generatePart(partType);
     });
-    
-    addHoverEffects();
 });
-
-function addHoverEffects() {
-    document.querySelectorAll('button').forEach(button => {
-        button.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-        });
-    });
-}
