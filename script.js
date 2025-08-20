@@ -1,10 +1,19 @@
 function injectAccessibilitySettings() {
-    if (!document.getElementById('open-dyslexic-font')) {
-        const link = document.createElement('link');
-        link.id = 'open-dyslexic-font';
-        link.rel = 'stylesheet';
-        link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
-        document.head.appendChild(link);
+    if (!document.getElementById('open-dyslexic-font-local')) {
+        const style = document.createElement('style');
+        style.id = 'open-dyslexic-font-local';
+        style.textContent = `
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: url('font/OpenDyslexic-Regular.woff2') format('woff2'),
+                 url('font/OpenDyslexic-Regular.woff') format('woff'),
+                 url('font/OpenDyslexic-Regular.otf') format('opentype'),
+                 url('font/OpenDyslexic-Regular.eot') format('embedded-opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        `;
+        document.head.appendChild(style);
     }
     const panel = document.createElement('div');
     panel.id = 'accessibility-panel';
@@ -77,24 +86,30 @@ function injectAccessibilitySettings() {
     });
     panel.querySelector('#acc-font-size').addEventListener('change', function() {
         document.documentElement.style.fontSize = this.value + 'px';
-        const container = document.querySelector('.container');
-        if (container) container.style.fontSize = this.value + 'px';
-        const results = document.querySelector('.results');
-        if (results) results.style.fontSize = this.value + 'px';
+        document.body.style.fontSize = this.value + 'px';
+        [
+            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+        ].forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => {
+                el.style.fontSize = this.value + 'px';
+            });
+        });
     });
     panel.querySelector('#acc-font-family').addEventListener('change', function() {
         document.body.style.fontFamily = this.value;
-        const container = document.querySelector('.container');
-        if (container) container.style.fontFamily = this.value;
-        const results = document.querySelector('.results');
-        if (results) results.style.fontFamily = this.value;
+        [
+            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+        ].forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => {
+                el.style.fontFamily = this.value;
+            });
+        });
     });
     panel.querySelector('#acc-color-scheme').addEventListener('change', function() {
         setColorScheme(this.value);
     });
 }
 
-function setColorScheme(scheme) {
     let bg, fg;
     if (scheme === 'dark') {
         bg = '#181818'; fg = '#f1f1f1';
@@ -109,12 +124,15 @@ function setColorScheme(scheme) {
     document.documentElement.style.setProperty('--acc-fg', fg);
     document.body.style.background = bg === '#fff' ? '' : bg;
     document.body.style.color = bg === '#fff' ? '' : fg;
-    const container = document.querySelector('.container');
-    if (container) {
-        container.style.background = bg;
-        container.style.color = fg;
-        container.style.borderColor = fg;
-    }
+    [
+        '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+    ].forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => {
+            el.style.background = bg;
+            el.style.color = fg;
+            if (el.classList.contains('container')) el.style.borderColor = fg;
+        });
+    });
 }
 let animalData = {
     base: [],
