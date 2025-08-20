@@ -35,6 +35,7 @@ function injectAccessibilitySettings() {
         <strong>Accessibility Settings</strong><br>
         <label>Font Size:
             <select id="acc-font-size">
+                <option value="14">Small</option>
                 <option value="16">Default</option>
                 <option value="18">Large</option>
                 <option value="22">Extra Large</option>
@@ -88,7 +89,7 @@ function injectAccessibilitySettings() {
         document.documentElement.style.fontSize = this.value + 'px';
         document.body.style.fontSize = this.value + 'px';
         [
-            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel', 'button'
         ].forEach(sel => {
             document.querySelectorAll(sel).forEach(el => {
                 el.style.fontSize = this.value + 'px';
@@ -98,7 +99,7 @@ function injectAccessibilitySettings() {
     panel.querySelector('#acc-font-family').addEventListener('change', function() {
         document.body.style.fontFamily = this.value;
         [
-            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+            '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel', 'button'
         ].forEach(sel => {
             document.querySelectorAll(sel).forEach(el => {
                 el.style.fontFamily = this.value;
@@ -126,7 +127,7 @@ function setColorScheme(scheme) {
     document.body.style.background = bg === '#fff' ? '' : bg;
     document.body.style.color = bg === '#fff' ? '' : fg;
     [
-        '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel'
+        '.container', '.results', '.main', '.final-section', '.icons', '.buttons', '.divider', '.subtitle', 'h1', '#accessibility-panel', 'button'
     ].forEach(sel => {
         document.querySelectorAll(sel).forEach(el => {
             el.style.background = bg;
