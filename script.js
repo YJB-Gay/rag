@@ -1,6 +1,11 @@
-// Accessibility settings UI and logic
 function injectAccessibilitySettings() {
-    // Create settings panel
+    if (!document.getElementById('open-dyslexic-font')) {
+        const link = document.createElement('link');
+        link.id = 'open-dyslexic-font';
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.cdnfonts.com/css/open-dyslexic';
+        document.head.appendChild(link);
+    }
     const panel = document.createElement('div');
     panel.id = 'accessibility-panel';
     panel.style.position = 'fixed';
@@ -35,6 +40,7 @@ function injectAccessibilitySettings() {
                 <option value="Tahoma, sans-serif">Tahoma</option>
                 <option value="Comic Sans MS, cursive, sans-serif">Comic Sans</option>
                 <option value="Courier New, monospace">Courier New</option>
+                <option value="'OpenDyslexic', 'OpenDyslexicAlta', Arial, sans-serif">OpenDyslexic</option>
             </select>
         </label><br>
         <label>Color Scheme:
@@ -48,8 +54,6 @@ function injectAccessibilitySettings() {
         <button id="acc-close" style="margin-top:8px;">Close</button>
     `;
     document.body.appendChild(panel);
-
-    // Toggle button
     const toggleBtn = document.createElement('button');
     toggleBtn.id = 'acc-toggle';
     toggleBtn.textContent = 'Accessibility';
@@ -65,49 +69,51 @@ function injectAccessibilitySettings() {
     toggleBtn.style.cursor = 'pointer';
     toggleBtn.style.fontSize = '16px';
     document.body.appendChild(toggleBtn);
-
     toggleBtn.addEventListener('click', () => {
         panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
     });
     panel.querySelector('#acc-close').addEventListener('click', () => {
         panel.style.display = 'none';
     });
-
-    // Font size
     panel.querySelector('#acc-font-size').addEventListener('change', function() {
         document.documentElement.style.fontSize = this.value + 'px';
+        const container = document.querySelector('.container');
+        if (container) container.style.fontSize = this.value + 'px';
+        const results = document.querySelector('.results');
+        if (results) results.style.fontSize = this.value + 'px';
     });
-    // Font family
     panel.querySelector('#acc-font-family').addEventListener('change', function() {
         document.body.style.fontFamily = this.value;
+        const container = document.querySelector('.container');
+        if (container) container.style.fontFamily = this.value;
+        const results = document.querySelector('.results');
+        if (results) results.style.fontFamily = this.value;
     });
-    // Color scheme
     panel.querySelector('#acc-color-scheme').addEventListener('change', function() {
         setColorScheme(this.value);
     });
 }
 
 function setColorScheme(scheme) {
+    let bg, fg;
     if (scheme === 'dark') {
-        document.documentElement.style.setProperty('--acc-bg', '#181818');
-        document.documentElement.style.setProperty('--acc-fg', '#f1f1f1');
-        document.body.style.background = '#181818';
-        document.body.style.color = '#f1f1f1';
+        bg = '#181818'; fg = '#f1f1f1';
     } else if (scheme === 'high-contrast') {
-        document.documentElement.style.setProperty('--acc-bg', '#000');
-        document.documentElement.style.setProperty('--acc-fg', '#fff');
-        document.body.style.background = '#000';
-        document.body.style.color = '#fff';
+        bg = '#000'; fg = '#fff';
     } else if (scheme === 'yellow-black') {
-        document.documentElement.style.setProperty('--acc-bg', '#000');
-        document.documentElement.style.setProperty('--acc-fg', '#FFD600');
-        document.body.style.background = '#000';
-        document.body.style.color = '#FFD600';
+        bg = '#000'; fg = '#FFD600';
     } else {
-        document.documentElement.style.setProperty('--acc-bg', '#fff');
-        document.documentElement.style.setProperty('--acc-fg', '#222');
-        document.body.style.background = '';
-        document.body.style.color = '';
+        bg = '#fff'; fg = '#222';
+    }
+    document.documentElement.style.setProperty('--acc-bg', bg);
+    document.documentElement.style.setProperty('--acc-fg', fg);
+    document.body.style.background = bg === '#fff' ? '' : bg;
+    document.body.style.color = bg === '#fff' ? '' : fg;
+    const container = document.querySelector('.container');
+    if (container) {
+        container.style.background = bg;
+        container.style.color = fg;
+        container.style.borderColor = fg;
     }
 }
 let animalData = {
