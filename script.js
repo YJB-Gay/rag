@@ -110,6 +110,7 @@ function injectAccessibilitySettings() {
     });
 }
 
+function setColorScheme(scheme) {
     let bg, fg;
     if (scheme === 'dark') {
         bg = '#181818'; fg = '#f1f1f1';
