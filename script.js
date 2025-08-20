@@ -119,18 +119,25 @@ function getRandomItem(array) {
 }
 
 function generatePart(partType) {
-    const result = getRandomItem(animalData[partType]);
-    currentAnimal[partType] = result;
-    
     const resultElement = document.getElementById(`${partType}-result`);
-    resultElement.textContent = result;
-    resultElement.classList.add('generated', 'new-result');
-    
-    setTimeout(() => {
-        resultElement.classList.remove('new-result');
-    }, 500);
-    
-    updateFinalDescription();
+    let spinFrames = 20;
+    let frame = 0;
+    let spinInterval = setInterval(() => {
+        const temp = getRandomItem(animalData[partType]);
+        resultElement.textContent = temp;
+        resultElement.classList.add('generated', 'new-result');
+        frame++;
+        if (frame >= spinFrames) {
+            clearInterval(spinInterval);
+            const result = getRandomItem(animalData[partType]);
+            currentAnimal[partType] = result;
+            resultElement.textContent = result;
+            setTimeout(() => {
+                resultElement.classList.remove('new-result');
+            }, 500);
+            updateFinalDescription();
+        }
+    }, 100);
 }
 
 function updateFinalDescription() {
